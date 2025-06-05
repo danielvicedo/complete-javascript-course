@@ -243,6 +243,17 @@ btnSort.addEventListener('click', function (e) {
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+const eurToUsd = 1.1;
+const movementsUSD = movements.map(el => el * eurToUsd);
+console.log(movementsUSD);
+
+const withdrawals = movements.filter(mov => mov < 0);
+console.log(withdrawals);
+
+const maxVal = movements.reduce((acc, curr) => {
+  return acc < curr ? curr : acc;
+}, movements[0]);
+console.log(`MaxVal equals to: ${maxVal}`);
 /*
 /////////////////////////////////////////////////
 // Simple Array Methods
@@ -362,7 +373,21 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
+const dogsJulia = [3, 5, 2, 12, 7];
+const dogsKate = [10, 5, 6, 1, 4];
 
+const checkDogs = function (dogsJulia, dogsKate) {
+  const updatedDogsJulia = dogsJulia.slice(1, dogsJulia.length - 2);
+  console.log(updatedDogsJulia);
+  const jointDogs = updatedDogsJulia.concat(dogsKate);
+  jointDogs.forEach(function (dog, i) {
+    const adultOrPuppy =
+      dog >= 3 ? `is an adult, and is ${dog} years old` : `is still a puppy 🐶`;
+    console.log(`Dog number ${i + 1} ${adultOrPuppy}`);
+  });
+};
+
+checkDogs(dogsJulia, dogsKate);
 /*
 const checkDogs = function (dogsJulia, dogsKate) {
   const dogsJuliaCorrected = dogsJulia.slice();
@@ -469,6 +494,16 @@ TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 GOOD LUCK 😀
 */
 
+const calcAverageHumanAge = function (ages) {
+  const humanAges = ages.map(dogAge => {
+    return dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4;
+  });
+  const adultDogs = humanAges.filter(ages => ages >= 18);
+  const avgHumanAge =
+    adultDogs.reduce((acc, curr) => acc + curr, 0) / adultDogs.length;
+  return avgHumanAge;
+};
+console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
 /*
 const calcAverageHumanAge = function (ages) {
   const humanAges = ages.map(age => (age <= 2 ? 2 * age : 16 + age * 4));
@@ -520,6 +555,23 @@ TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
+
+const calcAverageHumanAgeChain = ages =>
+  ages
+    .map(dogAge => {
+      return dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4;
+    })
+    .filter(ages => ages >= 18)
+    .reduce((acc, curr, i, arr) => acc + curr / arr.length, 0);
+
+console.log(calcAverageHumanAgeChain([16, 6, 10, 5, 6, 1, 4]));
+
+const lastMovement = movements.findLastIndex(mov => Math.abs(mov) > 1000);
+console.log(
+  `Your latest movement bigger than 1000eur was ${
+    movements.length - lastMovement
+  } movements ago`
+);
 
 /*
 const calcAverageHumanAge = ages =>
@@ -632,7 +684,6 @@ BONUS: What's the average weight of the heaviest breed that likes to fetch? HINT
 TEST DATA:
 */
 
-/*
 const breeds = [
   {
     breed: 'German Shepherd',
@@ -671,6 +722,45 @@ const breeds = [
   },
 ];
 
+const huskyWeight = breeds.find(breed => breed.breed === 'Husky').averageWeight;
+console.log(huskyWeight);
+
+const runningAndFetchBreed = breeds.find(
+  breed =>
+    breed.activities.includes('running') && breed.activities.includes('fetch')
+).breed;
+console.log(runningAndFetchBreed);
+
+const allActivities = breeds.map(breed => breed.activities).flat();
+console.log(allActivities);
+
+const uniqueActivities = [...new Set(allActivities)];
+console.log(uniqueActivities);
+
+const swimmingAdjacent = [
+  ...new Set(
+    breeds
+      .filter(breed => breed.activities.includes('swimming'))
+      .flatMap(breed => breed.activities)
+      .filter(activity => activity !== 'swimming')
+  ),
+];
+console.log(swimmingAdjacent);
+
+const avgWeigthMoreThan10Kg = breeds.every(breed => breed.averageWeight > 10);
+console.log(avgWeigthMoreThan10Kg);
+
+const activeDogs = breeds.some(breed => breed.activities.length >= 3);
+console.log(activeDogs);
+
+const maxAvgWeigthFetch = breeds
+  .filter(breed => breed.activities.includes('fetch'))
+  .reduce(
+    (acc, breed) => (breed.averageWeight > acc ? breed.averageWeight : acc),
+    breeds[0].averageWeight
+  );
+console.log(maxAvgWeigthFetch);
+/*
 // 1.
 const huskyWeight = breeds.find(breed => breed.breed === 'Husky').averageWeight;
 console.log(huskyWeight);
@@ -827,6 +917,32 @@ console.log(movements);
 ///////////////////////////////////////
 // Array Methods Practice
 
+*/
+const bankDepositSum = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .filter(mov => mov > 0)
+  .reduce((sum, mov) => sum + mov, 0);
+
+console.log(bankDepositSum);
+
+const depositsMoreThan1000 = accounts
+  .flatMap(acc => acc.movements)
+  .filter(mov => mov > 1000).length;
+
+console.log(depositsMoreThan1000);
+
+const { deposits, withdrawals2 } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, curr) => {
+      curr > 0 ? (sums.deposits += curr) : (sums.withdrawals2 += curr);
+      return sums;
+    },
+    { deposits: 0, withdrawals2: 0 }
+  );
+console.log(deposits, withdrawals2);
+/*
 // 1.
 const bankDepositSum = accounts
   .flatMap(acc => acc.movements)
@@ -923,7 +1039,6 @@ const dogs = [
 GOOD LUCK 😀
 */
 
-/*
 const dogs = [
   { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
   { weight: 8, curFood: 200, owners: ['Matilda'] },
@@ -932,6 +1047,66 @@ const dogs = [
   { weight: 32, curFood: 340, owners: ['Michael'] },
 ];
 
+dogs.forEach(dog => (dog.recFood = Math.floor(dog.weight ** 0.75 * 28)));
+console.log(dogs);
+
+const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(
+  `Sarah's dog is eating ${
+    sarahDog.curFood > sarahDog.recFood ? 'more' : 'less'
+  } food than recommended.`
+);
+
+const ownersTooMuch = dogs
+  .filter(dog => dog.curFood > dog.recFood)
+  .flatMap(dog => dog.owners);
+console.log(ownersTooMuch);
+const ownersTooLittle = dogs
+  .filter(dog => dog.curFood < dog.recFood)
+  .flatMap(dog => dog.owners);
+console.log(ownersTooLittle);
+
+const ownersTooMuchStr = ownersTooMuch.join(' and ');
+const ownersTooLittleStr = ownersTooLittle.join(' and ');
+
+console.log(
+  `${ownersTooMuchStr}'s dogs eat too much! and ${ownersTooLittleStr}'s dogs eat too little!`
+);
+
+const anyDogMatchCurrAndRecWeight = dogs.some((dog, i, arr) => {
+  if (dog.curFood === dog.recFood) {
+    console.log(arr[i]);
+  }
+  return dog.curFood === dog.recFood;
+});
+console.log(anyDogMatchCurrAndRecWeight);
+
+const areAllDogsEatingOk = function (dogs) {
+  return dogs.every(
+    dog => dog.curFood > dog.recFood * 0.9 && dog.curFood < dog.recFood * 1.1
+  );
+};
+console.log(areAllDogsEatingOk(dogs));
+
+const dogsGroupedByWeight = Object.groupBy(dogs, dog => {
+  if (dog.weight < 10) {
+    return 'under-weight';
+  } else if (dog.weight >= 10 && dog.weight < 30) {
+    return 'perfect-weight';
+  } else {
+    return 'over-weight';
+  }
+});
+console.log(dogsGroupedByWeight);
+
+const dogsGroupedByOwners = Object.groupBy(dogs, dog => {
+  return dog.owners.length + '-owners';
+});
+console.log(dogsGroupedByOwners);
+
+const dogsSorted = dogs.toSorted((a, b) => a.recFood - b.recFood);
+console.log(dogs, dogsSorted);
+/*
 // 1.
 dogs.forEach(dog => (dog.recFood = Math.floor(dog.weight ** 0.75 * 28)));
 console.log(dogs);

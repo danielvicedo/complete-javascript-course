@@ -193,9 +193,33 @@ const updateUI = function (acc) {
   ).format(now);
 };
 
+const startLogOutTimer = function () {
+  const tick = function () {
+    labelTimer.textContent = Intl.DateTimeFormat(currentAccount.locale, {
+      minute: '2-digit',
+      second: '2-digit',
+    }).format(timeInMili);
+    console.log(timeInMili);
+
+    if (timeInMili === 0) {
+      clearInterval(timer);
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = 'Log in to get started';
+    }
+    timeInMili = timeInMili - 1000;
+  };
+
+  let timeInMinutes = 5;
+  let timeInMili = timeInMinutes * 1000 * 60;
+
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -216,6 +240,11 @@ btnLogin.addEventListener('click', function (e) {
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
+
+    if (timer) {
+      clearInterval(timer);
+    }
+    timer = startLogOutTimer();
 
     // Update UI
     updateUI(currentAccount);
@@ -245,6 +274,10 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    //Reset Timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -254,11 +287,17 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
-    currentAccount.movementsDates.push(new Date().toISOString());
-    // Update UI
-    updateUI(currentAccount);
+    setTimeout(function () {
+      // Add movement
+      currentAccount.movements.push(amount);
+      currentAccount.movementsDates.push(new Date().toISOString());
+      // Update UI
+      updateUI(currentAccount);
+
+      //reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -296,3 +335,14 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+
+/*setInterval(function () {
+  const now = new Date();
+  console.log(
+    Intl.DateTimeFormat('en-GB', {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    }).format(now)
+  );
+}, 1000);*/

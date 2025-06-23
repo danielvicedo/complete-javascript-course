@@ -107,7 +107,7 @@ button:focus {
 }
 
 img {
-  transition: filter 0.5s;
+  transition: filter 1.5s;
 }
 
 .lazy-img {

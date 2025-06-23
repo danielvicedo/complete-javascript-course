@@ -23,6 +23,7 @@
 html {
   font-size: 62.5%;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -133,12 +134,40 @@ img {
 .nav__logo {
   height: 4.5rem;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .nav__links {
   display: flex;
   align-items: center;
   list-style: none;
+}
+
+a {
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav__links a:hover {
+  transform: translateY(-3px);
+}
+
+.nav__links a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s ease;
+}
+
+.nav__links a:hover::before {
+  transform: scaleY(1);
 }
 
 .nav__item {
